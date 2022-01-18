@@ -6,6 +6,7 @@ import javax.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.SessionAttribute;
 
 import hello.login.domain.member.Member;
 import hello.login.web.session.SessionManager;
@@ -25,14 +26,7 @@ public class HomeController {
 	// }
 
 	@GetMapping("/")
-	public String homeLogin(Model model, HttpServletRequest request) {
-		HttpSession session = request.getSession(false);
-		if (session == null) {
-			return "home";
-		}
-
-		Member loginMember = (Member)session.getAttribute(SessionConst.LOGIN_MEMBER);
-
+	public String homeLoginSpring(Model model, @SessionAttribute(name = SessionConst.LOGIN_MEMBER, required = false) Member loginMember) {
 		if (loginMember == null) {
 			return "home";
 		}

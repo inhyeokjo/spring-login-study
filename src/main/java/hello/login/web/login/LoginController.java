@@ -3,6 +3,7 @@ package hello.login.web.login;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import hello.login.domain.login.LoginService;
 import hello.login.domain.member.Member;
+import hello.login.web.SessionConst;
 import hello.login.web.session.SessionManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,8 +33,7 @@ public class LoginController {
 	}
 
 	@PostMapping("/login")
-	public String login(@Validated @ModelAttribute LoginForm loginForm, BindingResult bindingResult,
-			HttpServletResponse response) {
+	public String login(@Validated @ModelAttribute LoginForm loginForm, BindingResult bindingResult, HttpServletRequest request) {
 		if (bindingResult.hasErrors()) {
 			return "login/loginForm";
 		}
@@ -44,13 +45,19 @@ public class LoginController {
 		}
 
 		//로그인 성공 처리
-		sessionManager.createSession(loginMember, response);
+		//세션이 있으면 있는 세션 반환, 없으면 신규 세션을 생셩
+		HttpSession session = request.getSession();
+		//세션에 로그인 회원 정보 보관
+		session.setAttribute(SessionConst.LOGIN_MEMBER, loginMember);
 		return "redirect:/";
 	}
 
 	@PostMapping("/logout")
 	public String logout(HttpServletResponse response, HttpServletRequest request) {
-		sessionManager.expire(request);
+		HttpSession session = request.getSession(false);
+		if (session != null) {
+			session.invalidate();
+		}
 		return "redirect:/";
 	}
 

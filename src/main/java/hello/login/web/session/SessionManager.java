@@ -9,6 +9,9 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class SessionManager {
 	public static final Map<String, Object> sessionStore = new ConcurrentHashMap<>();
 	public static final String SESSION_COOKIE_NAME = "sessionId";

@@ -8,7 +8,6 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import hello.login.web.SessionConst;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
